@@ -7,4 +7,15 @@ This can process one Nanopore barcode directory of files at a time. You need to 
 
 The script will handle all file naming and downloads, including downloading a custon BLAST database based on NCBI virus sequences.
 
-This is "use at your own peril" code.
+This is "use at your own peril" code. It wraps several external programs, including:
+ 
+ - blastn
+ - minimap2
+ - samtools
+ - flye 2.9
+ - R 4+ (including tidyverse and ShortRead packages)
+ - seqtk
+
+Get those installed and into your local PATH, ensure that the R packages are installed, and you should be good to go. Place the plant_virus_blast.sh file in the main directory you're working in and run it. You'll get a fasta file of contigs, named after their closest virus BLAST match.
+
+If you encounter dependency issues, I will not be checking for them, so good luck!
