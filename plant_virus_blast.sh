@@ -3,8 +3,7 @@ set -ueo pipefail
 
 # To run: plant_virus_blast "host sci_name" /path/to/Nanopore/fastqs
 
-# Depends: blastn, minimap2, samtools, flye 2.9+, R 4+, seqtk
-# Get those installed and into your PATH
+# Depends: blastn, minimap2, samtools, flye 2.9+, R 4+, seqtk,
 # external files at:
 # Zahn, Geoffrey. (2022). NCBI Virus BLAST Database [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7250521
 
@@ -12,7 +11,7 @@ set -ueo pipefail
 # Create directory structure
 HOST_DIR=./Host_Reference
 MAIN_DIR=$(pwd)
-HOST_REF=$HOST_DIR/complete_genome.fasta
+HOST_REF=$HOST_DIR/complete_genome.fasta.gz
 SEQS_DIR=$2
 SEQS_FILE=$MAIN_DIR/complete_nanopore_reads.fq.gz
 outputsam=$MAIN_DIR/host_alignment.sam
@@ -85,6 +84,9 @@ fi
 
 # Download host reference genome. You must find the closest host relative on NCBI with a published genome assembly
 
+
+if [ -d $HOST_DIR ]; then
+
 ./datasets download genome taxon "$1" --reference --filename "Host.zip"
 mv Host.zip $HOST_DIR
 cd $HOST_DIR
@@ -94,6 +96,9 @@ find . -name "*.fna" | grep -v "rna.fna" | grep -v "cds_" | xargs cat | seqtk se
 gzip complete_genome.fasta
 rm -rf ncbi_dataset
 cd $MAIN_DIR
+else
+echo "Host directory already exists. Skipping download. Delete it and re-run script if you need to."
+fi
 
 echo "Combining nanopore read files into one query file..."
 
