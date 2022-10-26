@@ -25,7 +25,7 @@ BLAST_OUT=$BLAST_DIR/top_BLAST_hits_NCBI_VIRUS.txt
 if [ ! -d "$HOST_DIR" ]; then
 mkdir $HOST_DIR
 else
-echo "Host/ directory exists"
+echo "Host directory exists"
 fi
 
 if [ ! -d "$ASSEMBLY_DIR" ]; then
@@ -33,6 +33,16 @@ mkdir $ASSEMBLY_DIR
 else
 echo "Assembly directory exists"
 fi
+
+if [ ! -d "$BLAST_DIR" ]; then
+mkdir $BLAST_DIR
+else
+echo "BLAST output directory exists"
+fi
+
+
+
+
 
 # BLAST DATABASE #######################################################################
 
@@ -85,7 +95,7 @@ fi
 # Download host reference genome. You must find the closest host relative on NCBI with a published genome assembly
 
 
-if [ -d $HOST_DIR ]; then
+if [ ! -f $HOST_REF ]; then
 
 ./datasets download genome taxon "$1" --reference --filename "Host.zip"
 mv Host.zip $HOST_DIR
@@ -97,7 +107,7 @@ gzip complete_genome.fasta
 rm -rf ncbi_dataset
 cd $MAIN_DIR
 else
-echo "Host directory already exists. Skipping download. Delete it and re-run script if you need to."
+echo "Host reference genome already exists. Skipping download. Delete it and re-run script if you need to."
 fi
 
 echo "Combining nanopore read files into one query file..."
@@ -134,6 +144,10 @@ echo $(flye -v) > flye_version.txt
 
 flye --meta -t 12 --nano-raw $unmappedfq -o $ASSEMBLY_DIR
 
+cat $ASSEMBLY_FILE | seqtk seq > $ASSEMBLY_FILE.formatted
+
+ASSEMBLY_FILE=$ASSEMBLY_FILE.formatted
+
 # BLAST Against custom virus database #####################################
 
 echo "Running BLASTn on assembled contigs against custom NCBI Virus database..."
@@ -150,4 +164,6 @@ echo "Running R script to augment fasta headers..."
 
 Rscript augment_fasta_headers.R
 
-echo "Final output file is named final_renamed.fasta"
+seqtk seq final_renamed.fasta > Virus_Contigs_with_Taxonomy.fasta
+
+echo "Final output file is named Virus_Contigs_with_Taxonomy.fasta"
