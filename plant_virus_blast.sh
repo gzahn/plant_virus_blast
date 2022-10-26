@@ -8,6 +8,10 @@ set -ueo pipefail
 # Zahn, Geoffrey. (2022). NCBI Virus BLAST Database [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7250521
 
 
+if [ -f Virus_Contigs_with_Taxonomy.fasta ]; then
+echo "Virus_Contigs_with_Taxonomy.fasta is already present in the directory. Running this will overwrite it. Aborting..."
+else
+
 # Create directory structure
 HOST_DIR=./Host_Reference
 MAIN_DIR=$(pwd)
@@ -167,3 +171,4 @@ Rscript augment_fasta_headers.R
 seqtk seq final_renamed.fasta > Virus_Contigs_with_Taxonomy.fasta
 
 echo "Final output file is named Virus_Contigs_with_Taxonomy.fasta"
+fi
