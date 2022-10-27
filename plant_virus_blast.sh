@@ -5,7 +5,7 @@ set -ueo pipefail
 
 # Depends: blastn, minimap2, samtools, flye 2.9+, R 4+, seqtk,
 # external files at:
-# Zahn, Geoffrey. (2022). NCBI Virus BLAST Database [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7250521
+# Zahn, Geoffrey. (2022). NCBI Virus BLAST Database [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7250322
 
 
 if [ -f Virus_Contigs_with_Taxonomy.fasta ]; then
